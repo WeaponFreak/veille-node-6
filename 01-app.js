@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser= require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -41,4 +42,18 @@ app.post('/ajouter', (req, res) => {
  console.log('sauvegarder dans la BD')
  res.redirect('/')
  })
+})
+///// destruction de personne dans la bd
+
+app.get('/detruire/:id', (req, res) => {
+	var critere = ObjectID(req.params.id)
+	db.collection('adresse')
+	.findOneAndDelete( {'_id': critere} ,(err, resultat) => {
+		if (err) return res.send(500, err)
+		var cursor = db.collection('adresse').find().toArray(function(err, resultat){
+			if (err) return console.log(err)
+			res.render('gabarit.ejs', {adresse: resultat})
+		})
+
+	}) 
 })
