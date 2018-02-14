@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<body>
+	<form action="/ajouter" method="POST">
+		<input type="text" placeholder="nom" name="nom">
+		<input type="text" placeholder="telephone" name="telephone">
+		<button type="submit">Submit</button>
+	</form>
+	<table class="tableau">
+		<% let noLigne = 0 %>
+		<% for(elm of adresse	) { %>
+
+			<% if(noLigne == 0) { %>
+				<tr>
+					<% noLigne++ %>
+					<% for (p in elm) { %>
+					<td><%= p %></td>
+					<% } %>
+				</tr>
+			<% } %>
+			
+			<tr>
+				<% for (p in elm) { %>
+				<td><%= elm[p] %></td>
+				<% } %>
+			</tr>
+		<% } %>
+	</table>
+
+</body>
+</html>
