@@ -70,6 +70,7 @@ app.get('/trier/:cle/:ordre', (req, res) => {
 })
 /////sauvegarde
 app.post('/modifier/:id', (req, res) => {
+	console.log("allo")
 	console.log('req.body' + req.body)
 	 if (req.body['_id'] != req.body.id)
 	 { 
