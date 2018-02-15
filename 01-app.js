@@ -55,3 +55,16 @@ app.get('/detruire/:id', (req, res) => {
 
 	}) 
 })
+
+////ordre
+app.get('/trier/:cle/:ordre', (req, res) => {
+	let cle = req.params.cle
+	let ordre = (req.params.ordre == "asc" ? 1 : -1)
+	console.log(ordre);
+	let cursor = db.collection('adresse').find().sort(cle,ordre).toArray(function(err, resultat) {
+		console.log(ordre);
+		ordre == "asc"? ordre="dsc": ordre="asc"
+		console.log(ordre);
+		res.render('gabarit.ejs', {adresse: resultat, cle, ordre})
+	})
+})
