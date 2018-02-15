@@ -68,3 +68,34 @@ app.get('/trier/:cle/:ordre', (req, res) => {
 		res.render('gabarit.ejs', {adresse: resultat, cle, ordre})
 	})
 })
+/////sauvegarde
+app.post('/modifier/:id', (req, res) => {
+	console.log('req.body' + req.body)
+	 if (req.body['_id'] != req.body.id)
+	 { 
+		 console.log('sauvegarde') 
+		 var oModif = {
+		 "_id": ObjectID(req.body['_id']), 
+		 nom: req.body.nom,
+		 prenom:req.body.prenom, 
+		 telephone:req.body.telephone
+		 }
+		 var util = require("util");
+		 console.log('util = ' + util.inspect(oModif));
+	 }
+	 else
+	 {
+		 console.log('insert')
+		 console.log(req.body)
+		 var oModif = {
+			 nom: req.bodynom,
+			 prenom:req.body.prenom, 
+			 telephone:req.body.telephone
+		 }
+	 }
+	 db.collection('adresse').save(oModif, (err, result) => {
+	 if (err) return console.log(err)
+	 console.log('sauvegarder dans la BD')
+	 res.redirect('/list')
+	 })
+})
