@@ -9,8 +9,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs'); // générateur de template
 
 
-
-
 app.get('/', (req, res) => {
     let cursor = db.collection('adresse')
                   .find()
