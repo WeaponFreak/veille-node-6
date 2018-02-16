@@ -3,6 +3,7 @@ const app = express();
 const bodyParser= require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
+const util = require("util");
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -45,58 +46,49 @@ app.post('/ajouter', (req, res) => {
 
 app.get('/detruire/:id', (req, res) => {
 	var critere = ObjectID(req.params.id)
-	db.collection('adresse')
-	.findOneAndDelete( {'_id': critere} ,(err, resultat) => {
+
+	db.collection('adresse').findOneAndDelete( {'_id': critere} ,(err, resultat) => {
 		if (err) return res.send(500, err)
-		var cursor = db.collection('adresse').find().toArray(function(err, resultat){
+		var cursor = db.collection('adresse').find().toArray(function(err, resultat) {
 			if (err) return console.log(err)
 			res.render('gabarit.ejs', {adresse: resultat})
 		})
-
-	}) 
+	})
 })
 
 ////ordre
 app.get('/trier/:cle/:ordre', (req, res) => {
 	let cle = req.params.cle
+
+	console.log(req.params.ordre);
+
 	let ordre = (req.params.ordre == "asc" ? 1 : -1)
+	//ordre == "asc"? ordre="desc": ordre="asc"
 	console.log(ordre);
+
 	let cursor = db.collection('adresse').find().sort(cle,ordre).toArray(function(err, resultat) {
+
+		ordre = (req.params.ordre == "asc" ? "desc" : "asc")
+
 		console.log(ordre);
-		ordre == "asc"? ordre="dsc": ordre="asc"
-		console.log(ordre);
+
 		res.render('gabarit.ejs', {adresse: resultat, cle, ordre})
 	})
+
 })
 /////sauvegarde
-app.post('/modifier/:id', (req, res) => {
-	console.log("allo")
-	console.log('req.body' + req.body)
-	 if (req.body['_id'] != req.body.id)
-	 { 
-		 console.log('sauvegarde') 
-		 var oModif = {
-		 "_id": ObjectID(req.body['_id']), 
-		 nom: req.body.nom,
-		 prenom:req.body.prenom, 
-		 telephone:req.body.telephone
-		 }
-		 var util = require("util");
-		 console.log('util = ' + util.inspect(oModif));
-	 }
-	 else
+app.post('/modifier', (req, res) => {
+
+	
+	req.body._id = ObjectID(req.body._id)
+
+	console.log('util = ' + util.inspect(req.body));
+
+	 db.collection('adresse').save(req.body, (err, result) => 
 	 {
-		 console.log('insert')
-		 console.log(req.body)
-		 var oModif = {
-			 nom: req.bodynom,
-			 prenom:req.body.prenom, 
-			 telephone:req.body.telephone
-		 }
-	 }
-	 db.collection('adresse').save(oModif, (err, result) => {
 	 if (err) return console.log(err)
-	 console.log('sauvegarder dans la BD')
-	 res.redirect('/list')
+
+		 console.log('sauvegarder dans la BD')
+		 res.redirect('/')
 	 })
 })
